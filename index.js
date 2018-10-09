@@ -19,9 +19,7 @@ const upload = multer({
 	fileSize:maxSize //size of u file
 	},
   fileFilter: function (req, file, cb) {
-  	console.log('ici', file)
     var filetypes = /jpeg|jpg|png/
-    console.log('ici2')
     var mimetype = filetypes.test(file.mimetype)
     var extname = filetypes.test(path.extname(file.originalname).toLowerCase())
     if (mimetype && extname && file.originalname === escape(file.originalname)) {
@@ -53,15 +51,6 @@ app.use(helmet.ieNoOpen());
 app.use(helmet.referrerPolicy({ policy: 'no-referrer' }))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser());
-// app.use(
-//   session({
-//     name: 'SSID',
-//     secret: SESSION_SECRET,
-//     resave: true,
-//     saveUninitialized: true,
-//     cookie: { secure: true, httpOnly: true, domain: '.fileupload.dev', path: '/' },
-//   })
-// )
 app.use(csrf({ cookie: true }))
 
 app.get('/', function(req, res) {
@@ -84,10 +73,7 @@ app.get('/display', function(req, res, next) {
     return res.status(401).send()
   }
   let { name, pass } = auth(req)
-  console.log('name', name)
   name = escape(name)
-    console.log('name22222', name)
-
   pass = escape(pass)
   if (name === process.env.USER && pass === process.env.PASSWORD) {
     const pathImage = `${__dirname}/uploads/${req.query.image}`
