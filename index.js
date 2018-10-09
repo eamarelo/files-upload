@@ -1,22 +1,21 @@
-var express = require('express')
-var fs = require('fs')
-var https = require('https')
-var path = require('path');
-var app = express()
-var multer  = require('multer')
+const express = require('express')
+const fs = require('fs')
+const https = require('https')
+const path = require('path');
+const app = express()
+const multer  = require('multer')
 const csrf = require('csurf');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet')
 const bodyParser = require('body-parser')
-const session = require('express-session')
 const { home } = require('./home');
 const auth = require('basic-auth'); 
 
-var maxSize = 4 * 1000 * 1000;
+const maxSize = 4 * 1000 * 1000;
 
 const upload = multer({
   limits:{
-	fileSize:maxSize //size of u file
+	fileSize:maxSize
 	},
   fileFilter: function (req, file, cb) {
     var filetypes = /jpeg|jpg|png/
@@ -31,7 +30,6 @@ const upload = multer({
 })
 
 app.use(upload.single('avatar'))
-
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
@@ -60,7 +58,6 @@ app.get('/', function(req, res) {
     })
   )
 })
-
 
 app.post('/upload', upload.single('avatar'), function (req, res, next) {
   fs.chmodSync(`./uploads/${req.file.filename}`, '666')
